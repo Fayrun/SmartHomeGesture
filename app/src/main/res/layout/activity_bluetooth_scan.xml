@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_dark"
+    android:padding="16dp">
+
+    <Button
+        android:id="@+id/btnStartScan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="🔍 Tải thiết bị đã ghép đôi"
+        android:backgroundTint="@color/accent_blue"
+        android:textColor="@color/white"
+        android:layout_marginBottom="12dp" />
+
+    <ProgressBar
+        android:id="@+id/progressScan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:id="@+id/tvNoPairedDevices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Không tìm thấy thiết bị đã ghép đôi.\nHãy ghép đôi thiết bị trong Cài đặt Bluetooth."
+        android:textColor="@color/text_secondary"
+        android:gravity="center"
+        android:visibility="gone"
+        android:padding="24dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Thiết bị đã ghép đôi:"
+        android:textColor="@color/text_primary"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:paddingBottom="8dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvPairedDevices"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>

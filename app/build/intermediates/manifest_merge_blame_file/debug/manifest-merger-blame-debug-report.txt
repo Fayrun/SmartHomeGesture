@@ -1,0 +1,197 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.smarthomegesture"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="26"
+9        android:targetSdkVersion="34" />
+10
+11    <!-- Bluetooth permissions -->
+12    <uses-permission android:name="android.permission.BLUETOOTH" />
+12-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:5:5-68
+12-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:5:22-65
+13    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+13-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:6:5-74
+13-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:6:22-71
+14    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+14-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:7:5-76
+14-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:7:22-73
+15    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+15-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:8:5-73
+15-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:8:22-70
+16
+17    <!-- WiFi permissions -->
+18    <uses-permission android:name="android.permission.INTERNET" />
+18-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:11:5-67
+18-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:11:22-64
+19    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+19-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:12:5-76
+19-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:12:22-73
+20    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+20-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:13:5-76
+20-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:13:22-73
+21    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+21-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:14:5-79
+21-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:14:22-76
+22    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+22-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:15:5-81
+22-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:15:22-78
+23
+24    <!-- Sensor features -->
+25    <uses-feature
+25-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:18:5-98
+26        android:name="android.hardware.sensor.accelerometer"
+26-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:18:19-71
+27        android:required="true" />
+27-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:18:72-95
+28    <uses-feature
+28-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:19:5-95
+29        android:name="android.hardware.sensor.gyroscope"
+29-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:19:19-67
+30        android:required="false" />
+30-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:19:68-92
+31
+32    <!-- Bluetooth feature -->
+33    <uses-feature
+33-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:22:5-88
+34        android:name="android.hardware.bluetooth"
+34-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:22:19-60
+35        android:required="false" />
+35-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:22:61-85
+36
+37    <permission
+37-->[androidx.core:core:1.12.0] C:\Users\luuph\.gradle\caches\transforms-3\27ad49e110844709146a48c38c841427\transformed\core-1.12.0\AndroidManifest.xml:22:5-24:47
+38        android:name="com.example.smarthomegesture.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+38-->[androidx.core:core:1.12.0] C:\Users\luuph\.gradle\caches\transforms-3\27ad49e110844709146a48c38c841427\transformed\core-1.12.0\AndroidManifest.xml:23:9-81
+39        android:protectionLevel="signature" />
+39-->[androidx.core:core:1.12.0] C:\Users\luuph\.gradle\caches\transforms-3\27ad49e110844709146a48c38c841427\transformed\core-1.12.0\AndroidManifest.xml:24:9-44
+40
+41    <uses-permission android:name="com.example.smarthomegesture.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+41-->[androidx.core:core:1.12.0] C:\Users\luuph\.gradle\caches\transforms-3\27ad49e110844709146a48c38c841427\transformed\core-1.12.0\AndroidManifest.xml:26:5-97
+41-->[androidx.core:core:1.12.0] C:\Users\luuph\.gradle\caches\transforms-3\27ad49e110844709146a48c38c841427\transformed\core-1.12.0\AndroidManifest.xml:26:22-94
+42
+43    <application
+43-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:24:5-52:19
+44        android:allowBackup="true"
+44-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:25:9-35
+45        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+45-->[androidx.core:core:1.12.0] C:\Users\luuph\.gradle\caches\transforms-3\27ad49e110844709146a48c38c841427\transformed\core-1.12.0\AndroidManifest.xml:28:18-86
+46        android:debuggable="true"
+47        android:extractNativeLibs="false"
+48        android:icon="@mipmap/ic_launcher"
+48-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:26:9-43
+49        android:label="@string/app_name"
+49-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:27:9-41
+50        android:roundIcon="@mipmap/ic_launcher_round"
+50-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:28:9-54
+51        android:supportsRtl="true"
+51-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:29:9-35
+52        android:testOnly="true"
+53        android:theme="@style/Theme.SmartHomeGesture" >
+53-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:30:9-54
+54        <activity
+54-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:32:9-40:20
+55            android:name="com.example.smarthomegesture.MainActivity"
+55-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:33:13-41
+56            android:exported="true"
+56-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:34:13-36
+57            android:screenOrientation="portrait" >
+57-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:35:13-49
+58            <intent-filter>
+58-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:36:13-39:29
+59                <action android:name="android.intent.action.MAIN" />
+59-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:37:17-69
+59-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:37:25-66
+60
+61                <category android:name="android.intent.category.LAUNCHER" />
+61-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:38:17-77
+61-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:38:27-74
+62            </intent-filter>
+63        </activity>
+64        <activity
+64-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:42:9-45:58
+65            android:name="com.example.smarthomegesture.DeviceControlActivity"
+65-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:43:13-50
+66            android:exported="false"
+66-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:44:13-37
+67            android:parentActivityName="com.example.smarthomegesture.MainActivity" />
+67-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:45:13-55
+68        <activity
+68-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:47:9-50:58
+69            android:name="com.example.smarthomegesture.BluetoothScanActivity"
+69-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:48:13-50
+70            android:exported="false"
+70-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:49:13-37
+71            android:parentActivityName="com.example.smarthomegesture.MainActivity" />
+71-->C:\BT3_Android\SmartHomeGesture\app\src\main\AndroidManifest.xml:50:13-55
+72
+73        <provider
+73-->[androidx.emoji2:emoji2:1.2.0] C:\Users\luuph\.gradle\caches\transforms-3\fc54dde20eb54929f91888b76e8cac07\transformed\emoji2-1.2.0\AndroidManifest.xml:24:9-32:20
+74            android:name="androidx.startup.InitializationProvider"
+74-->[androidx.emoji2:emoji2:1.2.0] C:\Users\luuph\.gradle\caches\transforms-3\fc54dde20eb54929f91888b76e8cac07\transformed\emoji2-1.2.0\AndroidManifest.xml:25:13-67
+75            android:authorities="com.example.smarthomegesture.androidx-startup"
+75-->[androidx.emoji2:emoji2:1.2.0] C:\Users\luuph\.gradle\caches\transforms-3\fc54dde20eb54929f91888b76e8cac07\transformed\emoji2-1.2.0\AndroidManifest.xml:26:13-68
+76            android:exported="false" >
+76-->[androidx.emoji2:emoji2:1.2.0] C:\Users\luuph\.gradle\caches\transforms-3\fc54dde20eb54929f91888b76e8cac07\transformed\emoji2-1.2.0\AndroidManifest.xml:27:13-37
+77            <meta-data
+77-->[androidx.emoji2:emoji2:1.2.0] C:\Users\luuph\.gradle\caches\transforms-3\fc54dde20eb54929f91888b76e8cac07\transformed\emoji2-1.2.0\AndroidManifest.xml:29:13-31:52
+78                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+78-->[androidx.emoji2:emoji2:1.2.0] C:\Users\luuph\.gradle\caches\transforms-3\fc54dde20eb54929f91888b76e8cac07\transformed\emoji2-1.2.0\AndroidManifest.xml:30:17-75
+79                android:value="androidx.startup" />
+79-->[androidx.emoji2:emoji2:1.2.0] C:\Users\luuph\.gradle\caches\transforms-3\fc54dde20eb54929f91888b76e8cac07\transformed\emoji2-1.2.0\AndroidManifest.xml:31:17-49
+80            <meta-data
+80-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\luuph\.gradle\caches\transforms-3\2f5faf8ffd5553d065bee578728a13f0\transformed\lifecycle-process-2.7.0\AndroidManifest.xml:29:13-31:52
+81                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+81-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\luuph\.gradle\caches\transforms-3\2f5faf8ffd5553d065bee578728a13f0\transformed\lifecycle-process-2.7.0\AndroidManifest.xml:30:17-78
+82                android:value="androidx.startup" />
+82-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\luuph\.gradle\caches\transforms-3\2f5faf8ffd5553d065bee578728a13f0\transformed\lifecycle-process-2.7.0\AndroidManifest.xml:31:17-49
+83            <meta-data
+83-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\luuph\.gradle\caches\transforms-3\7c440f90495adcf781698b034dda88c9\transformed\profileinstaller-1.3.0\AndroidManifest.xml:29:13-31:52
+84                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+84-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\luuph\.gradle\caches\transforms-3\7c440f90495adcf781698b034dda88c9\transformed\profileinstaller-1.3.0\AndroidManifest.xml:30:17-85
+85                android:value="androidx.startup" />
+85-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\luuph\.gradle\caches\transforms-3\7c440f90495adcf781698b034dda88c9\transformed\profileinstaller-1.3.0\AndroidManifest.xml:31:17-49
+86        </provider>
+87
+88        <receiver
+88-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\luuph\.gradle\caches\transforms-3\7c440f90495adcf781698b034dda88c9\transformed\profileinstaller-1.3.0\AndroidManifest.xml:34:9-52:20
+89            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+89-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\luuph\.gradle\caches\transforms-3\7c440f90495adcf781698b034dda88c9\transformed\profileinstaller-1.3.0\AndroidManifest.xml:35:13-76
+90            android:directBootAware="false"
+90-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\luuph\.gradle\caches\transforms-3\7c440f90495adcf781698b034dda88c9\transformed\profileinstaller-1.3.0\AndroidManifest.xml:36:13-44
+91            android:enabled="true"
+91-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\luuph\.gradle\caches\transforms-3\7c440f90495adcf781698b034dda88c9\transformed\profileinstaller-1.3.0\AndroidManifest.xml:37:13-35
+92            android:exported="true"
+92-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\luuph\.gradle\caches\transforms-3\7c440f90495adcf781698b034dda88c9\transformed\profileinstaller-1.3.0\AndroidManifest.xml:38:13-36
+93            android:permission="android.permission.DUMP" >
+93-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\luuph\.gradle\caches\transforms-3\7c440f90495adcf781698b034dda88c9\transformed\profileinstaller-1.3.0\AndroidManifest.xml:39:13-57
+94            <intent-filter>
+94-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\luuph\.gradle\caches\transforms-3\7c440f90495adcf781698b034dda88c9\transformed\profileinstaller-1.3.0\AndroidManifest.xml:40:13-42:29
+95                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+95-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\luuph\.gradle\caches\transforms-3\7c440f90495adcf781698b034dda88c9\transformed\profileinstaller-1.3.0\AndroidManifest.xml:41:17-91
+95-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\luuph\.gradle\caches\transforms-3\7c440f90495adcf781698b034dda88c9\transformed\profileinstaller-1.3.0\AndroidManifest.xml:41:25-88
+96            </intent-filter>
+97            <intent-filter>
+97-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\luuph\.gradle\caches\transforms-3\7c440f90495adcf781698b034dda88c9\transformed\profileinstaller-1.3.0\AndroidManifest.xml:43:13-45:29
+98                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+98-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\luuph\.gradle\caches\transforms-3\7c440f90495adcf781698b034dda88c9\transformed\profileinstaller-1.3.0\AndroidManifest.xml:44:17-85
+98-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\luuph\.gradle\caches\transforms-3\7c440f90495adcf781698b034dda88c9\transformed\profileinstaller-1.3.0\AndroidManifest.xml:44:25-82
+99            </intent-filter>
+100            <intent-filter>
+100-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\luuph\.gradle\caches\transforms-3\7c440f90495adcf781698b034dda88c9\transformed\profileinstaller-1.3.0\AndroidManifest.xml:46:13-48:29
+101                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+101-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\luuph\.gradle\caches\transforms-3\7c440f90495adcf781698b034dda88c9\transformed\profileinstaller-1.3.0\AndroidManifest.xml:47:17-88
+101-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\luuph\.gradle\caches\transforms-3\7c440f90495adcf781698b034dda88c9\transformed\profileinstaller-1.3.0\AndroidManifest.xml:47:25-85
+102            </intent-filter>
+103            <intent-filter>
+103-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\luuph\.gradle\caches\transforms-3\7c440f90495adcf781698b034dda88c9\transformed\profileinstaller-1.3.0\AndroidManifest.xml:49:13-51:29
+104                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+104-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\luuph\.gradle\caches\transforms-3\7c440f90495adcf781698b034dda88c9\transformed\profileinstaller-1.3.0\AndroidManifest.xml:50:17-95
+104-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\luuph\.gradle\caches\transforms-3\7c440f90495adcf781698b034dda88c9\transformed\profileinstaller-1.3.0\AndroidManifest.xml:50:25-92
+105            </intent-filter>
+106        </receiver>
+107    </application>
+108
+109</manifest>

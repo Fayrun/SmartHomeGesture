@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Smart Home Gesture</string>
+    <string name="gesture_wave">Vẫy tay – Bật/Tắt đèn</string>
+    <string name="gesture_tilt_up">Nghiêng lên – Tăng âm lượng</string>
+    <string name="gesture_tilt_down">Nghiêng xuống – Giảm âm lượng</string>
+    <string name="gesture_rotate_right">Xoay phải – Bài tiếp theo</string>
+    <string name="gesture_rotate_left">Xoay trái – Bài trước</string>
+    <string name="connect">Kết nối</string>
+    <string name="disconnect">Ngắt kết nối</string>
+    <string name="connected">Đã kết nối</string>
+    <string name="disconnected">Chưa kết nối</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="wifi">WiFi</string>
+    <string name="device_on">Đang bật</string>
+    <string name="device_off">Đang tắt</string>
+    <string name="volume">Âm lượng</string>
+</resources>

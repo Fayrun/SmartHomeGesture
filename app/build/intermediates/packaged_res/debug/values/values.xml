@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="accent_blue">#FF4FC3F7</color>
+    <color name="accent_green">#FF66BB6A</color>
+    <color name="accent_orange">#FFFFA726</color>
+    <color name="accent_purple">#FF7E57C2</color>
+    <color name="accent_red">#FFEF5350</color>
+    <color name="bg_dark">#FF121212</color>
+    <color name="black">#FF000000</color>
+    <color name="card_bg">#FF1E1E2E</color>
+    <color name="card_off">#FF1E1E2E</color>
+    <color name="card_on">#FF1B3A2A</color>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="text_primary">#FFE0E0E0</color>
+    <color name="text_secondary">#FF9E9E9E</color>
+    <color name="white">#FFFFFFFF</color>
+    <string name="app_name">Smart Home Gesture</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="connect">Kết nối</string>
+    <string name="connected">Đã kết nối</string>
+    <string name="device_off">Đang tắt</string>
+    <string name="device_on">Đang bật</string>
+    <string name="disconnect">Ngắt kết nối</string>
+    <string name="disconnected">Chưa kết nối</string>
+    <string name="gesture_rotate_left">Xoay trái – Bài trước</string>
+    <string name="gesture_rotate_right">Xoay phải – Bài tiếp theo</string>
+    <string name="gesture_tilt_down">Nghiêng xuống – Giảm âm lượng</string>
+    <string name="gesture_tilt_up">Nghiêng lên – Tăng âm lượng</string>
+    <string name="gesture_wave">Vẫy tay – Bật/Tắt đèn</string>
+    <string name="volume">Âm lượng</string>
+    <string name="wifi">WiFi</string>
+    <style name="Theme.SmartHomeGesture" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/accent_purple</item>
+        <item name="colorPrimaryVariant">@color/accent_blue</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/accent_green</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <item name="android:statusBarColor">@color/bg_dark</item>
+        <item name="android:navigationBarColor">@color/bg_dark</item>
+        <item name="android:windowBackground">@color/bg_dark</item>
+    </style>
+</resources>
