@@ -32,6 +32,9 @@ id btnNextTrack
 id btnPrevTrack
 id btnScanBluetooth
 id btnStartScan
+id btnToggleCamera
+id cameraPreviewView
+id cardCameraWave
 id cardDevice
 id etDeviceAddress
 id imgDeviceIcon
@@ -54,6 +57,7 @@ id switchPower
 id tvAccelData
 id tvBtAddress
 id tvBtDeviceName
+id tvCameraStatus
 id tvConnectStatus
 id tvConnectionType
 id tvDetailDeviceName
@@ -65,6 +69,7 @@ id tvDeviceStatus
 id tvGestureStatus
 id tvGyroData
 id tvNoPairedDevices
+id tvProxStatus
 id tvTargetDevice
 id tvVolumeValue
 layout activity_bluetooth_scan

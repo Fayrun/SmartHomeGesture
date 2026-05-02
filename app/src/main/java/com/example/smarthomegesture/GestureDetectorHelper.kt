@@ -8,47 +8,63 @@ import kotlin.math.abs
 import kotlin.math.sqrt
 
 /**
- * Helper class xử lý dữ liệu từ Accelerometer & Gyroscope
- * để nhận diện các cử chỉ tay theo thời gian thực.
+ * Helper class xử lý dữ liệu từ Accelerometer, Gyroscope
+ * và Proximity Sensor để nhận diện cử chỉ tay.
  *
- * Các cử chỉ được nhận diện:
- *  - WAVE      : Vẫy tay ngang (bật/tắt đèn)
- *  - TILT_UP   : Nghiêng lên   (tăng âm lượng)
- *  - TILT_DOWN : Nghiêng xuống (giảm âm lượng)
- *  - ROTATE_LEFT  : Xoay trái (bài trước)
- *  - ROTATE_RIGHT : Xoay phải (bài tiếp)
+ * Cử chỉ được hỗ trợ:
+ *  - WAVE (Proximity) : Vẫy tay TRƯỚC camera/cảm biến → bật/tắt đèn  ← MỚI
+ *  - WAVE (Accel)     : Lắc điện thoại ngang → bật/tắt đèn (dự phòng)
+ *  - TILT_UP/DOWN     : Nghiêng điện thoại → âm lượng
+ *  - ROTATE_LEFT/RIGHT: Xoay cổ tay → chuyển bài
  */
 class GestureDetectorHelper(
     private val sensorManager: SensorManager,
     private val listener: GestureListener
 ) : SensorEventListener {
 
-    // ── Ngưỡng phát hiện cử chỉ ────────────────────────────────────────────
+    // ── Ngưỡng cảm biến ────────────────────────────────────────────────────
     companion object {
-        private const val WAVE_THRESHOLD       = 12f   // m/s² – gia tốc ngang tối thiểu
-        private const val WAVE_MIN_COUNT       = 2     // số lần đổi chiều tối thiểu
-        private const val WAVE_WINDOW_MS       = 1000L // cửa sổ thời gian (ms)
+        // Accelerometer wave (dự phòng nếu không có proximity)
+        private const val WAVE_THRESHOLD        = 12f
+        private const val WAVE_MIN_COUNT        = 2
+        private const val WAVE_WINDOW_MS        = 1000L
 
-        private const val TILT_THRESHOLD       = 5f    // m/s² – nghiêng dọc
-        private const val TILT_COOLDOWN_MS     = 300L  // thời gian chờ giữa 2 lần tilt
+        // Tilt
+        private const val TILT_THRESHOLD        = 5f
+        private const val TILT_COOLDOWN_MS      = 300L
 
-        private const val GYRO_ROTATE_THRESHOLD = 2.5f // rad/s – tốc độ xoay tối thiểu
+        // Gyroscope
+        private const val GYRO_ROTATE_THRESHOLD = 2.5f
         private const val GYRO_COOLDOWN_MS      = 600L
+
+        // Proximity wave: cần vẫy ít nhất N lần qua cảm biến trong T ms
+        private const val PROX_WAVE_COUNT       = 2     // số lần tay che/bỏ tối thiểu
+        private const val PROX_WAVE_WINDOW_MS   = 1500L // trong vòng 1.5 giây
+        private const val PROX_COOLDOWN_MS      = 1000L // cooldown sau khi kích hoạt
     }
 
-    // ── Trạng thái nội bộ ──────────────────────────────────────────────────
-    // Accelerometer
-    private var lastAccelX   = 0f
-    private var waveCount    = 0
-    private var waveStartMs  = 0L
-    private var lastTiltMs   = 0L
+    // ── Trạng thái Accelerometer ───────────────────────────────────────────
+    private var lastAccelX  = 0f
+    private var waveCount   = 0
+    private var waveStartMs = 0L
+    private var lastTiltMs  = 0L
 
-    // Gyroscope
-    private var lastGyroMs   = 0L
+    // ── Trạng thái Gyroscope ───────────────────────────────────────────────
+    private var lastGyroMs  = 0L
 
-    // Sensor references
-    private val accelSensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-    private val gyroSensor:  Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
+    // ── Trạng thái Proximity ───────────────────────────────────────────────
+    private var proxWaveCount   = 0      // số lần tay che cảm biến
+    private var proxWaveStartMs = 0L     // thời điểm bắt đầu đếm
+    private var lastProxMs      = 0L     // cooldown sau khi trigger
+    private var isHandNear      = false  // tay đang che cảm biến hay không
+
+    // ── Sensor references ──────────────────────────────────────────────────
+    private val accelSensor: Sensor? =
+        sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+    private val gyroSensor:  Sensor? =
+        sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
+    private val proxSensor:  Sensor? =
+        sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
 
     // ── Vòng đời ──────────────────────────────────────────────────────────
 
@@ -59,13 +75,18 @@ class GestureDetectorHelper(
         gyroSensor?.let {
             sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_GAME)
         }
+        // Proximity dùng NORMAL để tiết kiệm pin (không cần cập nhật nhanh)
+        proxSensor?.let {
+            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
+        }
     }
 
     fun stop() {
         sensorManager.unregisterListener(this)
     }
 
-    fun hasGyroscope(): Boolean = gyroSensor != null
+    fun hasGyroscope(): Boolean  = gyroSensor  != null
+    fun hasProximity(): Boolean  = proxSensor   != null
 
     // ── SensorEventListener ────────────────────────────────────────────────
 
@@ -73,108 +94,107 @@ class GestureDetectorHelper(
         when (event.sensor.type) {
             Sensor.TYPE_ACCELEROMETER -> processAccelerometer(event)
             Sensor.TYPE_GYROSCOPE     -> processGyroscope(event)
+            Sensor.TYPE_PROXIMITY     -> processProximity(event)
         }
     }
 
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) { /* ignored */ }
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+
+    // ── Xử lý Proximity Sensor (vẫy tay trước điện thoại) ─────────────────
+
+    private fun processProximity(event: SensorEvent) {
+        val now      = System.currentTimeMillis()
+        val maxRange = event.sensor.maximumRange
+        val dist     = event.values[0]
+
+        // Phát hiện tay đang che cảm biến (gần = near)
+        val near = dist < maxRange
+
+        // Chỉ xử lý khi trạng thái thay đổi (near ↔ far)
+        if (near == isHandNear) return
+        isHandNear = near
+
+        // Chỉ đếm khi tay ĐẾN GẦN (che cảm biến), không đếm lúc rút tay
+        if (!near) return
+
+        // Bỏ qua nếu đang trong cooldown sau lần kích hoạt trước
+        if (now - lastProxMs < PROX_COOLDOWN_MS) return
+
+        // Bắt đầu cửa sổ đếm mới nếu quá lâu từ lần che trước
+        if (proxWaveCount == 0 || now - proxWaveStartMs > PROX_WAVE_WINDOW_MS) {
+            proxWaveCount   = 1
+            proxWaveStartMs = now
+        } else {
+            proxWaveCount++
+        }
+
+        // Đủ số lần vẫy trong cửa sổ thời gian → kích hoạt!
+        if (proxWaveCount >= PROX_WAVE_COUNT) {
+            listener.onWaveDetected()
+            proxWaveCount = 0
+            lastProxMs    = now
+        }
+    }
 
     // ── Xử lý Accelerometer ───────────────────────────────────────────────
 
     private fun processAccelerometer(event: SensorEvent) {
-        val x = event.values[0]   // Trục ngang (wave)
-        val y = event.values[1]   // Trục dọc  (tilt)
+        val x   = event.values[0]
+        val y   = event.values[1]
+        val z   = event.values[2]
         val now = System.currentTimeMillis()
+        val mag = sqrt(x * x + y * y + z * z)
 
-        // Tính vector gia tốc thực (loại bỏ gravity trên z)
-        val accelMagnitude = sqrt(x * x + y * y + event.values[2] * event.values[2])
-
-        // --- Phát hiện WAVE (vẫy tay ngang) ---
-        if (abs(x) > WAVE_THRESHOLD) {
-            if (waveCount == 0) {
-                waveStartMs = now
-                waveCount++
-                lastAccelX = x
-            } else {
-                val timeSinceStart = now - waveStartMs
-                // Kiểm tra đổi chiều
-                if ((x > 0 && lastAccelX < 0) || (x < 0 && lastAccelX > 0)) {
-                    waveCount++
-                    lastAccelX = x
-                }
-                if (timeSinceStart > WAVE_WINDOW_MS) {
-                    // Reset nếu quá thời gian
-                    waveCount = 0
-                } else if (waveCount >= WAVE_MIN_COUNT) {
-                    listener.onWaveDetected()
+        // Wave dự phòng (lắc ngang) – chỉ dùng khi không có proximity
+        if (!hasProximity()) {
+            if (abs(x) > WAVE_THRESHOLD) {
+                if (waveCount == 0) {
+                    waveStartMs = now; waveCount = 1; lastAccelX = x
+                } else if ((x > 0 && lastAccelX < 0) || (x < 0 && lastAccelX > 0)) {
+                    lastAccelX = x; waveCount++
+                    if (now - waveStartMs <= WAVE_WINDOW_MS && waveCount >= WAVE_MIN_COUNT) {
+                        listener.onWaveDetected(); waveCount = 0
+                    }
+                } else if (now - waveStartMs > WAVE_WINDOW_MS) {
                     waveCount = 0
                 }
             }
         }
 
-        // --- Phát hiện TILT (nghiêng dọc) ---
+        // Tilt (nghiêng)
         if (now - lastTiltMs > TILT_COOLDOWN_MS) {
             when {
-                y < -TILT_THRESHOLD -> {
-                    // Nghiêng về phía trước → tăng âm lượng
-                    listener.onTiltDetected(TiltDirection.UP)
-                    lastTiltMs = now
-                }
-                y > TILT_THRESHOLD -> {
-                    // Nghiêng về phía sau → giảm âm lượng
-                    listener.onTiltDetected(TiltDirection.DOWN)
-                    lastTiltMs = now
-                }
+                y < -TILT_THRESHOLD -> { listener.onTiltDetected(TiltDirection.UP);   lastTiltMs = now }
+                y >  TILT_THRESHOLD -> { listener.onTiltDetected(TiltDirection.DOWN); lastTiltMs = now }
             }
         }
 
-        // Gửi dữ liệu raw để hiển thị trên UI
-        listener.onSensorDataUpdated(x, y, event.values[2], accelMagnitude)
+        listener.onSensorDataUpdated(x, y, z, mag)
     }
 
     // ── Xử lý Gyroscope ───────────────────────────────────────────────────
 
     private fun processGyroscope(event: SensorEvent) {
-        val now = System.currentTimeMillis()
+        val now  = System.currentTimeMillis()
         if (now - lastGyroMs < GYRO_COOLDOWN_MS) return
-
-        val rotZ = event.values[2]   // Xoay quanh trục Z (yaw)
-
+        val rotZ = event.values[2]
         when {
-            rotZ > GYRO_ROTATE_THRESHOLD -> {
-                listener.onRotateDetected(RotateDirection.LEFT)
-                lastGyroMs = now
-            }
-            rotZ < -GYRO_ROTATE_THRESHOLD -> {
-                listener.onRotateDetected(RotateDirection.RIGHT)
-                lastGyroMs = now
-            }
+            rotZ >  GYRO_ROTATE_THRESHOLD -> { listener.onRotateDetected(RotateDirection.LEFT);  lastGyroMs = now }
+            rotZ < -GYRO_ROTATE_THRESHOLD -> { listener.onRotateDetected(RotateDirection.RIGHT); lastGyroMs = now }
         }
-
-        // Gửi dữ liệu gyroscope raw
         listener.onGyroDataUpdated(event.values[0], event.values[1], rotZ)
     }
 }
 
-// ── Enum hướng ────────────────────────────────────────────────────────────
-
-enum class TiltDirection { UP, DOWN }
+// ── Enums ──────────────────────────────────────────────────────────────────
+enum class TiltDirection   { UP, DOWN }
 enum class RotateDirection { LEFT, RIGHT }
 
-// ── Callback interface ────────────────────────────────────────────────────
-
+// ── Callback interface ─────────────────────────────────────────────────────
 interface GestureListener {
-    /** Vẫy tay → bật/tắt đèn */
     fun onWaveDetected()
-
-    /** Nghiêng điện thoại → điều chỉnh âm lượng */
     fun onTiltDetected(direction: TiltDirection)
-
-    /** Xoay điện thoại trái/phải → chuyển bài */
     fun onRotateDetected(direction: RotateDirection)
-
-    /** Dữ liệu Accelerometer raw (để hiển thị đồng hồ sensor) */
     fun onSensorDataUpdated(x: Float, y: Float, z: Float, magnitude: Float)
-
-    /** Dữ liệu Gyroscope raw */
     fun onGyroDataUpdated(x: Float, y: Float, z: Float)
 }

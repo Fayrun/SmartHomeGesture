@@ -8,6 +8,13 @@
         android:minSdkVersion="26"
         android:targetSdkVersion="34" />
 
+    <!-- Camera permission – vẫy tay qua camera trước -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature
+        android:name="android.hardware.camera.front"
+        android:required="false" />
+
     <!-- Bluetooth permissions -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -69,6 +76,15 @@
             android:name="com.example.smarthomegesture.BluetoothScanActivity"
             android:exported="false"
             android:parentActivityName="com.example.smarthomegesture.MainActivity" />
+
+        <service
+            android:name="androidx.camera.core.impl.MetadataHolderService"
+            android:enabled="false"
+            android:exported="false" >
+            <meta-data
+                android:name="androidx.camera.core.impl.MetadataHolderService.DEFAULT_CONFIG_PROVIDER"
+                android:value="androidx.camera.camera2.Camera2Config$DefaultProvider" />
+        </service>
 
         <provider
             android:name="androidx.startup.InitializationProvider"

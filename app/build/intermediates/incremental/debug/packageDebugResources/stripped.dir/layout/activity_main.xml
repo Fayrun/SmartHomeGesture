@@ -52,6 +52,66 @@
                 android:padding="16dp" />
         </androidx.cardview.widget.CardView>
 
+        <!-- ── Camera Wave Detector ── -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardCameraWave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:cardCornerRadius="10dp"
+            app:cardBackgroundColor="@color/card_bg"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="📷 Vẫy tay qua camera"
+                        android:textColor="@color/text_primary"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvCameraStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="● Đang chạy"
+                        android:textColor="@color/accent_green"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <!-- Preview nhỏ camera trước -->
+                <androidx.camera.view.PreviewView
+                    android:id="@+id/cameraPreviewView"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:scaleType="fitCenter"
+                    app:scaleType="fillCenter" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="✋ Vẫy tay 2 lần trước camera để bật/tắt đèn"
+                    android:textColor="@color/accent_orange"
+                    android:textSize="11sp"
+                    android:gravity="center"
+                    android:paddingTop="6dp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
         <!-- ── Thiết bị mục tiêu ── -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -204,22 +264,46 @@
                 android:orientation="vertical"
                 android:padding="12dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="📖 Hướng dẫn cử chỉ"
-                    android:textColor="@color/text_primary"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:paddingBottom="8dp" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="📖 Hướng dẫn cử chỉ"
+                        android:textColor="@color/text_primary"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvProxStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="👁 Proximity: --"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="11sp" />
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="👋  Vẫy tay ngang   →  Bật/Tắt đèn\n📱  Nghiêng lên      →  Tăng âm lượng\n📱  Nghiêng xuống  →  Giảm âm lượng\n🔄  Xoay sang phải →  Bài tiếp theo\n🔄  Xoay sang trái  →  Bài trước"
+                    android:text="✋  Vẫy tay trước camera  →  Bật/Tắt đèn\n📱  Nghiêng lên                →  Tăng âm lượng\n📱  Nghiêng xuống           →  Giảm âm lượng\n🔄  Xoay sang phải          →  Bài tiếp theo\n🔄  Xoay sang trái           →  Bài trước"
                     android:textColor="@color/text_secondary"
                     android:textSize="13sp"
                     android:lineSpacingExtra="4dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="💡 Vẫy tay 2 lần qua cảm biến nhỏ cạnh camera trước"
+                    android:textColor="@color/accent_orange"
+                    android:textSize="11sp"
+                    android:paddingTop="6dp" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -235,22 +319,34 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginEnd="6dp"
-                android:text="🔵 Bluetooth"
+                android:layout_marginEnd="4dp"
+                android:text="🔵 BT"
                 android:backgroundTint="@color/accent_blue"
                 android:textColor="@color/white"
-                android:textSize="13sp" />
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnToggleCamera"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:text="📷 Camera"
+                android:backgroundTint="@color/accent_green"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
 
             <Button
                 android:id="@+id/btnManageDevices"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginStart="6dp"
+                android:layout_marginStart="4dp"
                 android:text="⚙️ Thiết bị"
                 android:backgroundTint="@color/accent_purple"
                 android:textColor="@color/white"
-                android:textSize="13sp" />
+                android:textSize="12sp" />
         </LinearLayout>
 
         <!-- ── Danh sách thiết bị ── -->

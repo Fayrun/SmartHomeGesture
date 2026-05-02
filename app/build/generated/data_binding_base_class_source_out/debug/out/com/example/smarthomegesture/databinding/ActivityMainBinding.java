@@ -11,6 +11,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.camera.view.PreviewView;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
@@ -31,6 +32,15 @@ public final class ActivityMainBinding implements ViewBinding {
   public final Button btnScanBluetooth;
 
   @NonNull
+  public final Button btnToggleCamera;
+
+  @NonNull
+  public final PreviewView cameraPreviewView;
+
+  @NonNull
+  public final CardView cardCameraWave;
+
+  @NonNull
   public final CardView layoutGestureFeedback;
 
   @NonNull
@@ -46,10 +56,16 @@ public final class ActivityMainBinding implements ViewBinding {
   public final TextView tvAccelData;
 
   @NonNull
+  public final TextView tvCameraStatus;
+
+  @NonNull
   public final TextView tvGestureStatus;
 
   @NonNull
   public final TextView tvGyroData;
+
+  @NonNull
+  public final TextView tvProxStatus;
 
   @NonNull
   public final TextView tvTargetDevice;
@@ -58,21 +74,29 @@ public final class ActivityMainBinding implements ViewBinding {
   public final TextView tvVolumeValue;
 
   private ActivityMainBinding(@NonNull ScrollView rootView, @NonNull Button btnManageDevices,
-      @NonNull Button btnScanBluetooth, @NonNull CardView layoutGestureFeedback,
-      @NonNull ProgressBar progressVolume, @NonNull RecyclerView rvDevices,
-      @NonNull Spinner spinnerTargetDevice, @NonNull TextView tvAccelData,
+      @NonNull Button btnScanBluetooth, @NonNull Button btnToggleCamera,
+      @NonNull PreviewView cameraPreviewView, @NonNull CardView cardCameraWave,
+      @NonNull CardView layoutGestureFeedback, @NonNull ProgressBar progressVolume,
+      @NonNull RecyclerView rvDevices, @NonNull Spinner spinnerTargetDevice,
+      @NonNull TextView tvAccelData, @NonNull TextView tvCameraStatus,
       @NonNull TextView tvGestureStatus, @NonNull TextView tvGyroData,
-      @NonNull TextView tvTargetDevice, @NonNull TextView tvVolumeValue) {
+      @NonNull TextView tvProxStatus, @NonNull TextView tvTargetDevice,
+      @NonNull TextView tvVolumeValue) {
     this.rootView = rootView;
     this.btnManageDevices = btnManageDevices;
     this.btnScanBluetooth = btnScanBluetooth;
+    this.btnToggleCamera = btnToggleCamera;
+    this.cameraPreviewView = cameraPreviewView;
+    this.cardCameraWave = cardCameraWave;
     this.layoutGestureFeedback = layoutGestureFeedback;
     this.progressVolume = progressVolume;
     this.rvDevices = rvDevices;
     this.spinnerTargetDevice = spinnerTargetDevice;
     this.tvAccelData = tvAccelData;
+    this.tvCameraStatus = tvCameraStatus;
     this.tvGestureStatus = tvGestureStatus;
     this.tvGyroData = tvGyroData;
+    this.tvProxStatus = tvProxStatus;
     this.tvTargetDevice = tvTargetDevice;
     this.tvVolumeValue = tvVolumeValue;
   }
@@ -116,6 +140,24 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.btnToggleCamera;
+      Button btnToggleCamera = ViewBindings.findChildViewById(rootView, id);
+      if (btnToggleCamera == null) {
+        break missingId;
+      }
+
+      id = R.id.cameraPreviewView;
+      PreviewView cameraPreviewView = ViewBindings.findChildViewById(rootView, id);
+      if (cameraPreviewView == null) {
+        break missingId;
+      }
+
+      id = R.id.cardCameraWave;
+      CardView cardCameraWave = ViewBindings.findChildViewById(rootView, id);
+      if (cardCameraWave == null) {
+        break missingId;
+      }
+
       id = R.id.layoutGestureFeedback;
       CardView layoutGestureFeedback = ViewBindings.findChildViewById(rootView, id);
       if (layoutGestureFeedback == null) {
@@ -146,6 +188,12 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tvCameraStatus;
+      TextView tvCameraStatus = ViewBindings.findChildViewById(rootView, id);
+      if (tvCameraStatus == null) {
+        break missingId;
+      }
+
       id = R.id.tvGestureStatus;
       TextView tvGestureStatus = ViewBindings.findChildViewById(rootView, id);
       if (tvGestureStatus == null) {
@@ -155,6 +203,12 @@ public final class ActivityMainBinding implements ViewBinding {
       id = R.id.tvGyroData;
       TextView tvGyroData = ViewBindings.findChildViewById(rootView, id);
       if (tvGyroData == null) {
+        break missingId;
+      }
+
+      id = R.id.tvProxStatus;
+      TextView tvProxStatus = ViewBindings.findChildViewById(rootView, id);
+      if (tvProxStatus == null) {
         break missingId;
       }
 
@@ -171,8 +225,9 @@ public final class ActivityMainBinding implements ViewBinding {
       }
 
       return new ActivityMainBinding((ScrollView) rootView, btnManageDevices, btnScanBluetooth,
-          layoutGestureFeedback, progressVolume, rvDevices, spinnerTargetDevice, tvAccelData,
-          tvGestureStatus, tvGyroData, tvTargetDevice, tvVolumeValue);
+          btnToggleCamera, cameraPreviewView, cardCameraWave, layoutGestureFeedback, progressVolume,
+          rvDevices, spinnerTargetDevice, tvAccelData, tvCameraStatus, tvGestureStatus, tvGyroData,
+          tvProxStatus, tvTargetDevice, tvVolumeValue);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

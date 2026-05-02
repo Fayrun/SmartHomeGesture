@@ -43,6 +43,10 @@ class MainActivity : AppCompatActivity(), GestureListener, DeviceAdapter.DeviceA
     private lateinit var rvDevices:         RecyclerView
     private lateinit var layoutGestureFeedback: View
     private lateinit var spinnerDevice:     Spinner
+    private lateinit var tvProxStatus:      TextView
+    private lateinit var cardCameraWave:    View
+    private lateinit var tvCameraStatus:    TextView
+    private lateinit var cameraPreviewView: androidx.camera.view.PreviewView
 
     // ── Logic Components ───────────────────────────────────────────────────
     private lateinit var sensorManager:      SensorManager
@@ -52,6 +56,8 @@ class MainActivity : AppCompatActivity(), GestureListener, DeviceAdapter.DeviceA
     private lateinit var deviceRepository:   DeviceRepository
     private lateinit var deviceAdapter:      DeviceAdapter
     private lateinit var audioManager:       AudioManager
+    private var cameraWaveDetector:          CameraWaveDetector? = null
+    private var isCameraWaveOn = false
 
     private var devices = mutableListOf<SmartDevice>()
     private var selectedDeviceIndex = 0
@@ -61,6 +67,7 @@ class MainActivity : AppCompatActivity(), GestureListener, DeviceAdapter.DeviceA
         private const val REQUEST_BLUETOOTH_PERMISSIONS = 1001
         private const val REQUEST_LOCATION_PERMISSION   = 1002
         private const val REQUEST_ENABLE_BT             = 1003
+        private const val REQUEST_CAMERA_PERMISSION     = 1004
     }
 
     // ── Lifecycle ──────────────────────────────────────────────────────────
@@ -89,6 +96,7 @@ class MainActivity : AppCompatActivity(), GestureListener, DeviceAdapter.DeviceA
     override fun onDestroy() {
         super.onDestroy()
         bluetoothController.disconnect()
+        cameraWaveDetector?.stop()
     }
 
     // ── Khởi tạo ──────────────────────────────────────────────────────────
@@ -103,6 +111,10 @@ class MainActivity : AppCompatActivity(), GestureListener, DeviceAdapter.DeviceA
         rvDevices           = findViewById(R.id.rvDevices)
         layoutGestureFeedback = findViewById(R.id.layoutGestureFeedback)
         spinnerDevice       = findViewById(R.id.spinnerTargetDevice)
+        tvProxStatus        = findViewById(R.id.tvProxStatus)
+        cardCameraWave      = findViewById(R.id.cardCameraWave)
+        tvCameraStatus      = findViewById(R.id.tvCameraStatus)
+        cameraPreviewView   = findViewById(R.id.cameraPreviewView)
 
         // Nút điều hướng
         findViewById<View>(R.id.btnScanBluetooth).setOnClickListener {
@@ -110,6 +122,10 @@ class MainActivity : AppCompatActivity(), GestureListener, DeviceAdapter.DeviceA
         }
         findViewById<View>(R.id.btnManageDevices).setOnClickListener {
             startActivity(Intent(this, DeviceControlActivity::class.java))
+        }
+        // Nút bật/tắt camera wave
+        findViewById<View>(R.id.btnToggleCamera).setOnClickListener {
+            toggleCameraWave()
         }
     }
 
@@ -125,6 +141,15 @@ class MainActivity : AppCompatActivity(), GestureListener, DeviceAdapter.DeviceA
         val maxVol = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
         val curVol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
         currentVolume = (curVol.toFloat() / maxVol * 100).toInt()
+
+        // Hiển thị trạng thái Proximity
+        if (gestureDetector.hasProximity()) {
+            tvProxStatus.text = "👁 Proximity: ✅ Sẵn sàng"
+            tvProxStatus.setTextColor(getColor(R.color.accent_green))
+        } else {
+            tvProxStatus.text = "👁 Proximity: ❌ Không có"
+            tvProxStatus.setTextColor(getColor(R.color.accent_red))
+        }
 
         // Hiển thị thông báo nếu không có gyroscope
         if (!gestureDetector.hasGyroscope()) {
@@ -159,19 +184,9 @@ class MainActivity : AppCompatActivity(), GestureListener, DeviceAdapter.DeviceA
 
     // ── GestureListener callbacks ──────────────────────────────────────────
 
-    /** Cử chỉ vẫy tay → bật/tắt đèn */
+    /** Cử chỉ vẫy tay (từ Accelerometer/Proximity) → bật/tắt đèn */
     override fun onWaveDetected() {
-        runOnUiThread {
-            showGestureFeedback("👋 Vẫy tay – Bật/Tắt đèn")
-        }
-        val targets = getTargetDevices(DeviceType.LIGHT)
-        targets.forEach { device ->
-            device.isOn = !device.isOn
-            deviceRepository.updateDevice(device)
-            sendCommandToDevice(device, DeviceCommand(device.id, CommandAction.TOGGLE_POWER,
-                if (device.isOn) 1 else 0))
-            runOnUiThread { deviceAdapter.updateDevice(device) }
-        }
+        triggerWaveAction()
     }
 
     /** Cử chỉ nghiêng → điều chỉnh âm lượng THẬT của điện thoại */
@@ -387,6 +402,63 @@ class MainActivity : AppCompatActivity(), GestureListener, DeviceAdapter.DeviceA
         }
     }
 
+    // ── Camera Wave Detector ───────────────────────────────────────────────
+
+    private fun toggleCameraWave() {
+        if (!isCameraWaveOn) {
+            // Kiểm tra quyền camera trước
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.CAMERA),
+                    REQUEST_CAMERA_PERMISSION
+                )
+                return
+            }
+            startCameraWave()
+        } else {
+            stopCameraWave()
+        }
+    }
+
+    private fun startCameraWave() {
+        cameraWaveDetector = CameraWaveDetector(
+            context         = this,
+            lifecycleOwner  = this,
+            onWaveDetected  = { triggerWaveAction() }
+        ).also {
+            it.previewView = cameraPreviewView
+            it.start()
+        }
+        isCameraWaveOn = true
+        cardCameraWave.visibility = View.VISIBLE
+        tvCameraStatus.text = "● Đang chạy"
+        tvCameraStatus.setTextColor(getColor(R.color.accent_green))
+        Toast.makeText(this, "📷 Camera wave BẬT – Vẫy tay 2 lần để bật/tắt đèn", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun stopCameraWave() {
+        cameraWaveDetector?.stop()
+        cameraWaveDetector = null
+        isCameraWaveOn = false
+        cardCameraWave.visibility = View.GONE
+        Toast.makeText(this, "📷 Camera wave TẮT", Toast.LENGTH_SHORT).show()
+    }
+
+    /** Callback chung cho wave (từ camera hoặc sensor) */
+    private fun triggerWaveAction() {
+        runOnUiThread { showGestureFeedback("✋ Vẫy tay – Bật/Tắt đèn") }
+        val targets = getTargetDevices(DeviceType.LIGHT)
+        targets.forEach { device ->
+            device.isOn = !device.isOn
+            deviceRepository.updateDevice(device)
+            sendCommandToDevice(device, DeviceCommand(device.id, CommandAction.TOGGLE_POWER,
+                if (device.isOn) 1 else 0))
+            runOnUiThread { deviceAdapter.updateDevice(device) }
+        }
+    }
+
     // ── Quyền truy cập ────────────────────────────────────────────────────
 
     private fun checkPermissions() {
@@ -421,8 +493,17 @@ class MainActivity : AppCompatActivity(), GestureListener, DeviceAdapter.DeviceA
         requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_BLUETOOTH_PERMISSIONS) {
-            checkBluetoothEnabled()
+        when (requestCode) {
+            REQUEST_BLUETOOTH_PERMISSIONS -> checkBluetoothEnabled()
+            REQUEST_CAMERA_PERMISSION -> {
+                if (grantResults.isNotEmpty() &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startCameraWave()
+                } else {
+                    Toast.makeText(this, "❌ Cần quyền Camera để dùng tính năng này",
+                        Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
